@@ -160,7 +160,7 @@ const Header = memo(
           }}
         >
           <Stack alignItems="center" direction={'row'} gap={!matches ? 3 : 0}>
-            {!matches ? <Logo style={{ maxHeight: '25px' }} /> : null}
+            {!matches ? <Logo style={{ maxHeight: '40px' }} /> : null}
             <Nav
               matches={matches}
               dataPersistence={projectSettings?.dataPersistence}
