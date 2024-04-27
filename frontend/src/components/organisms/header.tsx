@@ -84,6 +84,11 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
       to: '/readme',
       label: <Translator path="components.organisms.header.readme" />
     });
+
+    tabs.push({
+      to: '/readme1',
+      label: <Translator path="components.organisms.header.readme1" />
+    }); 
   }
 
   const nav = (

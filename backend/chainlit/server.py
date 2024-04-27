@@ -33,6 +33,7 @@ from chainlit.data import get_data_layer
 from chainlit.data.acl import is_thread_author
 from chainlit.logger import logger
 from chainlit.markdown import get_markdown_str
+from chainlit.markdown import get_markdown1_str
 from chainlit.playground.config import get_llm_providers
 from chainlit.telemetry import trace_event
 from chainlit.types import (
@@ -89,7 +90,7 @@ async def lifespan(app: FastAPI):
 
         async def watch_files_for_changes():
             extensions = [".py"]
-            files = ["chainlit.md", "config.toml"]
+            files = ["chainlit.md", "chainlit1.md", "config.toml"]
             async for changes in awatch(config.root, stop_event=stop_event):
                 for change_type, file_path in changes:
                     file_name = os.path.basename(file_path)
@@ -533,6 +534,7 @@ async def project_settings(
 
     # Load the markdown file based on the provided language
     markdown = get_markdown_str(config.root, language)
+    markdown1 = get_markdown1_str(config.root, language)
 
     profiles = []
     if config.code.set_chat_profiles:
@@ -547,6 +549,7 @@ async def project_settings(
             "dataPersistence": get_data_layer() is not None,
             "threadResumable": bool(config.code.on_chat_resume),
             "markdown": markdown,
+            "markdown1": markdown1,
             "chatProfiles": profiles,
         }
     )

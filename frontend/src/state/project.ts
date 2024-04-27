@@ -10,6 +10,7 @@ export interface ChatProfile {
 
 export interface IProjectSettings {
   markdown?: string;
+  markdown1?: string;
   ui: {
     name: string;
     show_readme_as_default?: boolean;
