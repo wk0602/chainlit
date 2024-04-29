@@ -65,7 +65,6 @@ from starlette.middleware.cors import CORSMiddleware
 from typing_extensions import Annotated
 from watchfiles import awatch
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     host = config.run.host
@@ -323,13 +322,8 @@ async def logout(request: Request, response: Response):
 
 @app.post("/auth/header")
 async def header_auth(request: Request):
-    if not config.code.header_auth_callback:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No header_auth_callback defined",
-        )
 
-    user = await config.code.header_auth_callback(request.headers)
+    user = User()
 
     if not user:
         raise HTTPException(

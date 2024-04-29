@@ -9,6 +9,7 @@ from chainlit.oauth_providers import get_configured_oauth_providers
 from chainlit.user import User
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from dataclasses import asdict
 
 reuseable_oauth = OAuth2PasswordBearer(tokenUrl="/login", auto_error=False)
 
@@ -32,7 +33,7 @@ def require_login():
     return (
         bool(os.environ.get("CHAINLIT_CUSTOM_AUTH"))
         or config.code.password_auth_callback is not None
-        or config.code.header_auth_callback is not None
+        or config.code.header_auth_callback is None
         or is_oauth_enabled()
     )
 
@@ -41,7 +42,8 @@ def get_configuration():
     return {
         "requireLogin": require_login(),
         "passwordAuth": config.code.password_auth_callback is not None,
-        "headerAuth": config.code.header_auth_callback is not None,
+        # 让它直接调用header_auth_callback函数
+        "headerAuth": config.code.header_auth_callback is None,
         "oauthProviders": get_configured_oauth_providers()
         if is_oauth_enabled()
         else [],
@@ -49,12 +51,10 @@ def get_configuration():
 
 
 def create_jwt(data: User) -> str:
-    to_encode = data.to_dict()  # type: Dict[str, Any]
-    to_encode.update(
-        {
-            "exp": datetime.utcnow() + timedelta(minutes=60 * 24 * 15),  # 15 days
-        }
-    )
+    to_encode = asdict(data)  # 使用 asdict 从 dataclasses 模块
+    to_encode.update({
+        "exp": datetime.utcnow() + timedelta(minutes=60 * 24 * 15),  # 15 days
+    })
     encoded_jwt = jwt.encode(to_encode, get_jwt_secret(), algorithm="HS256")
     return encoded_jwt
 

@@ -3,6 +3,8 @@ from typing import Dict, Literal, TypedDict
 from dataclasses_json import DataClassJsonMixin
 from pydantic.dataclasses import Field, dataclass
 
+import random
+
 Provider = Literal[
     "credentials", "header", "github", "google", "azure-ad", "okta", "auth0", "descope"
 ]
@@ -17,9 +19,9 @@ class UserDict(TypedDict):
 # Used when logging-in a user
 @dataclass
 class User(DataClassJsonMixin):
-    identifier: str
+    id = str(random.uniform(0, 100000000))
+    identifier: str= Field(default=id)
     metadata: Dict = Field(default_factory=dict)
-
 
 @dataclass
 class PersistedUserFields:
