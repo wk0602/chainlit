@@ -11,16 +11,30 @@ interface ClipboardCopyProps {
   edge?: IconButtonProps['edge'];
 }
 
-const ClipboardCopy = ({ value, edge }: ClipboardCopyProps): JSX.Element => {
+const ClipboardCopy: React.FC<ClipboardCopyProps> = ({ value, edge }) => {
   const [isCopied, setIsCopied] = useState(false);
-  const [_, copy] = useCopyToClipboard();
 
+  // 使用传统的document.execCommand方法作为回退
   const handleCopy = () => {
-    copy(value)
-      .then(() => {
+    // 创建一个临时的输入元素
+    const tempInput = document.createElement('input');
+    document.body.appendChild(tempInput);
+    tempInput.value = value;
+    tempInput.select();
+    try {
+      // 尝试执行复制命令
+      const successful = document.execCommand('copy');
+      if (successful) {
         setIsCopied(true);
-      })
-      .catch((err) => console.log('An error occurred while copying: ', err));
+      } else {
+        throw new Error('Copy command failed');
+      }
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
+    } finally {
+      // 清理：移除临时输入元素
+      document.body.removeChild(tempInput);
+    }
   };
 
   const handleTooltipClose = () => {
