@@ -129,7 +129,9 @@ const _ThreadHistorySideBar = () => {
     }
   }, []);
 
-  return (
+  return null
+  /*
+  (
     <Box display="flex" position="relative">
       <Drawer
         className="chat-history-drawer"
@@ -207,6 +209,7 @@ const _ThreadHistorySideBar = () => {
       ) : null}
     </Box>
   );
+  */
 };
 
 const ThreadHistorySideBar = () => {
